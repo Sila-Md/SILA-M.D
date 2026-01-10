@@ -43,7 +43,7 @@ const Crypto = require('crypto');
 const path = require('path');
 const prefix = config.PREFIX;
 
-const ownerNumber = ['255612491554'];
+const ownerNumber = ['255789661031'];
 
 const tempDir = path.join(os.tmpdir(), 'cache-temp');
 if (!fs.existsSync(tempDir)) {
@@ -67,7 +67,7 @@ setInterval(clearTempDir, 5 * 60 * 1000);
 //===================SESSION-AUTH============================
 if (!fs.existsSync(__dirname + '/sessions/creds.json')) {
   if (!config.SESSION_ID) return console.log('Please add your session to SESSION_ID env !!');
-  const sessdata = config.SESSION_ID.replace("POPKID;;;", '');
+  const sessdata = config.SESSION_ID.replace("sila~", '');
   const filer = File.fromURL(`https://mega.nz/file/${sessdata}`);
   filer.download((err, data) => {
     if (err) throw err;
@@ -170,7 +170,7 @@ try {
       isForwarded: true,
       forwardedNewsletterMessageInfo: {
         newsletterJid: '120363402325089913@newsletter',
-        newsletterName: '🎅SILA TECH🎅',
+        newsletterName: 'SILA TECH',
         serverMessageId: 100
       }
     }
