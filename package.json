@@ -8,9 +8,7 @@
     "npm": "9.x"
   },
   "scripts": {
-    "start": "pm2 start index.js --deep-monitoring --attach --name SILA-M.D",
-    "stop": "pm2 stop SILA-M.D",
-    "restart": "pm2 restart SILA-M.D",
+    "start": "node index.js",
     "dev": "node index.js"
   },
   "dependencies": {
