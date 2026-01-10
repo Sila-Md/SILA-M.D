@@ -1,522 +1,590 @@
 const config = require('../config')
-const { cmd, commands } = require('../command')
+const { cmd } = require('../command')
+const axios = require('axios')
 
-// CALCULATE UPTIME
-function formatUptime(uptime) {
-    const hours = Math.floor(uptime / 3600)
-    const minutes = Math.floor((uptime % 3600) / 60)
-    const seconds = Math.floor(uptime % 60)
-    return { hours, minutes, seconds }
-}
+// =============================================================
+// 📌 ANIME COMMANDS
+// =============================================================
 
-// MAIN MENU COMMAND
+// Anime Hug
 cmd({
-    pattern: "menu",
-    alais: ["help", "commands", "allmenu"],
-    react: "📱",
-    desc: "Show all bot commands menu",
-    category: "general",
+    pattern: "hug",
+    alias: ["animehug", "cuddle"],
+    react: "🤗",
+    desc: "Get random anime hug image",
+    category: "anime",
+    use: '.hug',
     filename: __filename
 },
-async(conn, mek, m,{from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-    const uptime = process.uptime()
-    const { hours, minutes, seconds } = formatUptime(uptime)
-    
-    // Sanitize phone number
-    const sanitizedNumber = senderNumber ? senderNumber.replace('@s.whatsapp.net', '') : 'Unknown'
-    
-    // Active bots simulation
-    const activeBots = Math.floor(Math.random() * 5) + 1
-    
-    const menuText = `
-*╭━━━━━━━━━━━━━━━━●◌*
-*│ 🤖 Greet :* *Hello ${pushname || 'User'} 👋*
-*│ 🏷️ Bot Name :* SILA MD
-*│ ⏰ Run Time :* ${hours}h ${minutes}m ${seconds}s
-*│ 📱 Your Number :* ${sanitizedNumber}
-*│ 🔢 Active Bots :* ${activeBots}
-*╰━━━━━━━━━━━━━━━━●◌*
-
-*🤖 AI & TOOLS MENU*
-
-╭━━━━━━━━━━━━━━━━━●◌
-│    *🔹 Command :* .ai
-│  *✨ Chat With AI*
-│
-│    *🔹 Command :* .gemini
-│  *✨ Chat With Gemini AI*
-│
-│    *🔹 Command :* .gpt
-│  *✨ Chat With ChatGPT*
-│
-│    *🔹 Command :* .imagine
-│  *✨ Generate AI Images*
-│
-│    *🔹 Command :* .pollcreate
-│  *✨ Create Interactive Polls*
-│
-│    *🔹 Command :* .translate
-│  *✨ Translate Messages*
-╰━━━━━━━━━━━━━━━━━●◌
-
-*👥 GROUP MANAGEMENT*
-
-╭━━━━━━━━━━━━━━━━━●◌
-│    *🔹 Command :* .ginfo
-│  *👥 Show Group Information*
-│
-│    *🔹 Command :* .tagall
-│  *👥 Mention All Members*
-│
-│    *🔹 Command :* .tagadmin
-│  *👥 Mention Group Admins*
-│
-│    *🔹 Command :* .listonline
-│  *👥 Show Online Members*
-│
-│    *🔹 Command :* .topmember
-│  *👥 Top Active Members*
-│
-│    *🔹 Command :* .kick
-│  *👥 Remove Member From Group*
-│
-│    *🔹 Command :* .kickall
-│  *👥 Remove All Non-Admins*
-│
-│    *🔹 Command :* .add
-│  *👥 Add Member To Group*
-│
-│    *🔹 Command :* .mute
-│  *👥 Mute Group*
-│
-│    *🔹 Command :* .unmute
-│  *👥 Unmute Group*
-╰━━━━━━━━━━━━━━━━━●◌
-
-*⚙️ GROUP SETTINGS*
-
-╭━━━━━━━━━━━━━━━━━●◌
-│    *🔹 Command :* .setgname
-│  *⚙️ Change Group Name*
-│
-│    *🔹 Command :* .setgdesc
-│  *⚙️ Change Group Description*
-│
-│    *🔹 Command :* .setgpp
-│  *⚙️ Set Group Profile Picture*
-│
-│    *🔹 Command :* .opentime
-│  *⚙️ Open Group For Time*
-│
-│    *🔹 Command :* .closetime
-│  *⚙️ Close Group For Time*
-│
-│    *🔹 Command :* .welcome
-│  *⚙️ Setup Welcome Message*
-│
-│    *🔹 Command :* .rules
-│  *⚙️ Show Group Rules*
-│
-│    *🔹 Command :* .announce
-│  *⚙️ Make Announcement*
-╰━━━━━━━━━━━━━━━━━●◌
-
-*🎮 GAMES & FUN*
-
-╭━━━━━━━━━━━━━━━━━●◌
-│    *🔹 Command :* .quiz
-│  *🎮 Start Quiz Game*
-│
-│    *🔹 Command :* .wordgame
-│  *🎮 Word Guessing Game*
-│
-│    *🔹 Command :* .roulette
-│  *🎮 Random Selection Game*
-│
-│    *🔹 Command :* .memory
-│  *🎮 Memory Matching Game*
-│
-│    *🔹 Command :* .countdown
-│  *🎮 Start Countdown Timer*
-│
-│    *🔹 Command :* .sticker
-│  *🎮 Create Sticker From Image*
-│
-│    *🔹 Command :* .theme
-│  *🎮 Change Group Theme*
-╰━━━━━━━━━━━━━━━━━●◌
-
-*💰 GROUP ECONOMY*
-
-╭━━━━━━━━━━━━━━━━━●◌
-│    *🔹 Command :* .economy
-│  *💰 Group Economy System*
-│
-│    *🔹 Command :* .daily
-│  *💰 Claim Daily Reward*
-│
-│    *🔹 Command :* .shop
-│  *💰 Group Shop*
-│
-│    *🔹 Command :* .buy
-│  *💰 Buy Items From Shop*
-│
-│    *🔹 Command :* .leaderboard
-│  *💰 Quiz Leaderboard*
-│
-│    *🔹 Command :* .event
-│  *💰 Create Group Event*
-│
-│    *🔹 Command :* .rsvp
-│  *💰 RSVP For Event*
-╰━━━━━━━━━━━━━━━━━●◌
-
-*📥 DOWNLOAD MENU*
-
-╭━━━━━━━━━━━━━━━━━●◌
-│    *🔹 Command :* .song
-│  *⬇️ Download Youtube Songs*
-│
-│    *🔹 Command :* .video
-│  *⬇️ Download Youtube Videos*
-│
-│    *🔹 Command :* .tiktok
-│  *⬇️ Download Tiktok Videos*
-│
-│    *🔹 Command :* .fb
-│  *⬇️ Download Facebook Posts*
-│
-│    *🔹 Command :* .img
-│  *⬇️ Download Images From Google*
-│
-│    *🔹 Command :* .play
-│  *⬇️ Search & Download Songs*
-╰━━━━━━━━━━━━━━━━━●◌
-
-*🎵 MEDIA & ENTERTAINMENT*
-
-╭━━━━━━━━━━━━━━━━━●◌
-│    *🔹 Command :* .music
-│  *🎵 Group Music Player*
-│
-│    *🔹 Command :* .play
-│  *🎵 Play Music Controls*
-│
-│    *🔹 Command :* .games
-│  *🎵 Games Menu*
-│
-│    *🔹 Command :* .activity
-│  *🎵 Group Activity Stats*
-│
-│    *🔹 Command :* .schedule
-│  *🎵 Schedule Group Activities*
-│
-│    *🔹 Command :* .feedback
-│  *🎵 Send Group Feedback*
-╰━━━━━━━━━━━━━━━━━●◌
-
-*🚨 MODERATION TOOLS*
-
-╭━━━━━━━━━━━━━━━━━●◌
-│    *🔹 Command :* .report
-│  *🚨 Report A User*
-│
-│    *🔹 Command :* .warn
-│  *🚨 Warn A User*
-│
-│    *🔹 Command :* .filter
-│  *🚨 Content Filter*
-│
-│    *🔹 Command :* .antimention
-│  *🚨 Anti-Mention Protection*
-│
-│    *🔹 Command :* .antitag
-│  *🚨 Anti-Tag Protection*
-│
-│    *🔹 Command :* .clean
-│  *🚨 Clean Group Content*
-│
-│    *🔹 Command :* .hidetag
-│  *🚨 Hidden Tag All Members*
-╰━━━━━━━━━━━━━━━━━●◌
-
-*👑 OWNER COMMANDS*
-
-╭━━━━━━━━━━━━━━━━━●◌
-│    *🔹 Command :* .broadcast
-│  *👑 Broadcast To All Groups*
-│
-│    *🔹 Command :* .eval
-│  *👑 Execute JavaScript Code*
-│
-│    *🔹 Command :* .ban
-│  *👑 Ban User From Bot*
-│
-│    *🔹 Command :* .unban
-│  *👑 Unban User*
-│
-│    *🔹 Command :* .restart
-│  *👑 Restart Bot*
-│
-│    *🔹 Command :* .shutdown
-│  *👑 Shutdown Bot*
-│
-│    *🔹 Command :* .leave
-│  *👑 Make Bot Leave Group*
-│
-│    *🔹 Command :* .setprefix
-│  *👑 Change Bot Prefix*
-│
-│    *🔹 Command :* .sendall
-│  *👑 Send Message To All Users*
-│
-│    *🔹 Command :* .backupdata
-│  *👑 Backup Bot Data*
-│
-│    *🔹 Command :* .update
-│  *👑 Update Bot From GitHub*
-│
-│    *🔹 Command :* .terminal
-│  *👑 Execute Terminal Commands*
-╰━━━━━━━━━━━━━━━━━●◌
-
-*⚡ SYSTEM & INFO*
-
-╭━━━━━━━━━━━━━━━━━●◌
-│    *🔹 Command :* .status
-│  *⚡ Bot Status & Statistics*
-│
-│    *🔹 Command :* .serverinfo
-│  *⚡ Server Information*
-│
-│    *🔹 Command :* .logs
-│  *⚡ View Bot Logs*
-│
-│    *🔹 Command :* .userinfo
-│  *⚡ Get User Information*
-│
-│    *🔹 Command :* .listgroups
-│  *⚡ List All Groups*
-│
-│    *🔹 Command :* .grouhelp
-│  *⚡ Group Commands Help*
-│
-│    *🔹 Command :* .adminpanel
-│  *⚡ Admin Control Panel*
-│
-│    *🔹 Command :* .ownermenu
-│  *⚡ Owner Control Menu*
-╰━━━━━━━━━━━━━━━━━●◌
-
-*🛠️ UTILITY TOOLS*
-
-╭━━━━━━━━━━━━━━━━━●◌
-│    *🔹 Command :* .search
-│  *🛠️ Search In Group*
-│
-│    *🔹 Command :* .delete
-│  *🛠️ Delete Bot's Message*
-│
-│    *🔹 Command :* .senddm
-│  *🛠️ Send Direct Message*
-│
-│    *🔹 Command :* .link
-│  *🛠️ Get Group Invite Link*
-│
-│    *🔹 Command :* .join
-│  *🛠️ Join Group Using Link*
-│
-│    *🔹 Command :* .clearall
-│  *🛠️ Clear All Chats*
-│
-│    *🔹 Command :* .backup
-│  *🛠️ Backup Group Data*
-╰━━━━━━━━━━━━━━━━━●◌
-
-> *- 🚀 POWERED BY SILA MD*
-> *- 📞 Prefix: ${prefix}*
-> *- 📊 Total Commands: 100+*
-> *- 🕐 Time: ${new Date().toLocaleTimeString()}*
-
-*📌 Quick Tips:*
-• Use *${prefix}command* to execute
-• Tag me for immediate response
-• Report bugs to owner
-• Read group rules before using`
-
-    // Send menu with video
+async(conn, mek, m,{from, reply}) => {
     try {
-        await conn.sendMessage(from, {
-            video: { url: 'https://files.catbox.moe/qwftws.mp4' },
-            caption: menuText,
-            contextInfo: {
-                mentionedJid: [sender],
-                forwardingScore: 999,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363402325089913@newsletter',
-                    newsletterName: "𝐒𝐢𝐥𝐚 𝐌𝐃",
-                    serverMessageId: 143
-                }
-            }
-        }, { quoted: mek })
-        
-        // Send additional info
-        await conn.sendMessage(from, {
-            text: `*📋 QUICK ACCESS*\n\n` +
-                  `*🔹 ${prefix}ginfo* - Group Information\n` +
-                  `*🔹 ${prefix}games* - Games Menu\n` +
-                  `*🔹 ${prefix}economy* - Economy System\n` +
-                  `*🔹 ${prefix}ownermenu* - Owner Controls\n` +
-                  `*🔹 ${prefix}groupmenu* - Group Controls\n\n` +
-                  `*🤖 Type ${prefix} followed by any command above*`,
-            contextInfo: {
-                mentionedJid: [sender],
-                forwardingScore: 999,
-                isForwarded: true
-            }
-        })
-        
+        const response = await axios.get('https://okatsu-rolezapiiz.vercel.app/anime/hug')
+        if (response.data && response.data.url) {
+            await conn.sendMessage(from, {
+                image: { url: response.data.url },
+                caption: '🤗 *Anime Hug*\n> © Powered By Sila Tech'
+            }, { quoted: mek })
+        } else {
+            reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐠𝐞𝐭 𝐚𝐧𝐢𝐦𝐞 𝐡𝐮𝐠\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+        }
     } catch (e) {
-        // Fallback if video fails
-        await conn.sendMessage(from, {
-            text: menuText,
-            contextInfo: {
-                mentionedJid: [sender],
-                forwardingScore: 999,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363402325089913@newsletter',
-                    newsletterName: "𝐒𝐢𝐥𝐚 𝐌𝐃",
-                    serverMessageId: 143
-                }
-            }
-        }, { quoted: mek })
+        reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐠𝐞𝐭 𝐚𝐧𝐢𝐦𝐞 𝐡𝐮𝐠\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
     }
-    
-} catch (e) {
-    const errorMenu = `
-*╭━━━━━━━━━━━━━━━━●◌*
-*│ 🤖 Greet :* *Hello 👋*
-*│ 🏷️ Bot Name :* SILA MD
-*│ ⏰ Run Time :* Error
-*│ 📱 Status :* Menu Error
-*╰━━━━━━━━━━━━━━━━●◌*
-
-*❌ ERROR LOADING FULL MENU*
-
-*🔹 Use these commands instead:*
-• ${prefix}ginfo - Group Info
-• ${prefix}games - Games
-• ${prefix}economy - Economy
-• ${prefix}groupmenu - Group Menu
-• ${prefix}ownermenu - Owner Menu
-
-> *- 🚀 POWERED BY SILA MD*
-> *- 📞 Contact owner for help*`
-    
-    await conn.sendMessage(from, { text: errorMenu })
-    l(e)
-}
 })
 
-// QUICK MENU COMMAND
+// Akiyama Anime
 cmd({
-    pattern: "silamenu",
-    alais: ["smenu", "fastmenu", "minimenu"],
-    react: "⚡",
-    desc: "Quick commands menu",
-    category: "general",
+    pattern: "akiyama",
+    alias: ["akiyamapic"],
+    react: "🌸",
+    desc: "Get random Akiyama anime image",
+    category: "anime",
+    use: '.akiyama',
     filename: __filename
 },
-async(conn, mek, m,{from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-    const quickMenu = `
-*╭━━━━━━━━━━━━━━━━●◌*
-*│ ⚡ QUICK MENU SILA MD*
-*│ 📊 Total Commands: 100+*
-*│ 🎯 Category: 10 Sections*
-*╰━━━━━━━━━━━━━━━━●◌*
-
-*🎮 MOST USED COMMANDS*
-
-╭━━━━━━━━━━━━━━━━━●◌
-│ *${prefix}menu* - Full Menu
-│ *${prefix}ginfo* - Group Info
-│ *${prefix}tagall* - Tag Everyone
-│ *${prefix}games* - Games Menu
-│ *${prefix}sticker* - Make Sticker
-│ *${prefix}song* - Download Song
-│ *${prefix}video* - Download Video
-│ *${prefix}ai* - Chat With AI
-╰━━━━━━━━━━━━━━━━━●◌
-
-*👥 GROUP MANAGEMENT*
-
-╭━━━━━━━━━━━━━━━━━●◌
-│ *${prefix}mute* - Mute Group
-│ *${prefix}unmute* - Unmute Group
-│ *${prefix}kick* - Remove Member
-│ *${prefix}add* - Add Member
-│ *${prefix}promote* - Make Admin
-│ *${prefix}demote* - Remove Admin
-│ *${prefix}link* - Group Link
-│ *${prefix}rules* - Group Rules
-╰━━━━━━━━━━━━━━━━━●◌
-
-*💰 ECONOMY & FUN*
-
-╭━━━━━━━━━━━━━━━━━●◌
-│ *${prefix}daily* - Daily Reward
-│ *${prefix}shop* - Group Shop
-│ *${prefix}quiz* - Quiz Game
-│ *${prefix}event* - Create Event
-│ *${prefix}music* - Music Player
-│ *${prefix}theme* - Change Theme
-│ *${prefix}roulette* - Random Select
-│ *${prefix}countdown* - Timer
-╰━━━━━━━━━━━━━━━━━●◌
-
-*⚙️ ADMIN TOOLS*
-
-╭━━━━━━━━━━━━━━━━━●◌
-│ *${prefix}announce* - Announcement
-│ *${prefix}report* - Report User
-│ *${prefix}warn* - Warn User
-│ *${prefix}clean* - Clean Content
-│ *${prefix}filter* - Content Filter
-│ *${prefix}backup* - Backup Data
-│ *${prefix}search* - Search Group
-│ *${prefix}hidetag* - Hidden Tag
-╰━━━━━━━━━━━━━━━━━●◌
-
-> *- 🚀 POWERED BY SILA MD*
-> *- 📞 Prefix: ${prefix}*
-> *- ⏰ ${new Date().toLocaleTimeString()}*
-> *- 📱 Type ${prefix}menu for full list*`
-
-    // Send with image
+async(conn, mek, m,{from, reply}) => {
     try {
+        const response = await axios.get('https://okatsu-rolezapiiz.vercel.app/anime/akiyama')
+        if (response.data && response.data.url) {
+            await conn.sendMessage(from, {
+                image: { url: response.data.url },
+                caption: '🌸 *Akiyama Anime*\n> © Powered By Sila Tech'
+            }, { quoted: mek })
+        } else {
+            reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐠𝐞𝐭 𝐀𝐤𝐢𝐲𝐚𝐦𝐚 𝐢𝐦𝐚𝐠𝐞\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+        }
+    } catch (e) {
+        reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐠𝐞𝐭 𝐀𝐤𝐢𝐲𝐚𝐦𝐚 𝐢𝐦𝐚𝐠𝐞\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    }
+})
+
+// Deidara Anime
+cmd({
+    pattern: "deidara",
+    alias: ["deidarapic"],
+    react: "🎨",
+    desc: "Get random Deidara anime image",
+    category: "anime",
+    use: '.deidara',
+    filename: __filename
+},
+async(conn, mek, m,{from, reply}) => {
+    try {
+        const response = await axios.get('https://okatsu-rolezapiiz.vercel.app/anime/deidara')
+        if (response.data && response.data.url) {
+            await conn.sendMessage(from, {
+                image: { url: response.data.url },
+                caption: '🎨 *Deidara Anime*\n> © Powered By Sila Tech'
+            }, { quoted: mek })
+        } else {
+            reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐠𝐞𝐭 𝐃𝐞𝐢𝐝𝐚𝐫𝐚 𝐢𝐦𝐚𝐠𝐞\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    }
+    } catch (e) {
+        reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐠𝐞𝐭 𝐃𝐞𝐢𝐝𝐚𝐫𝐚 𝐢𝐦𝐚𝐠𝐞\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    }
+})
+
+// Anime Fanart
+cmd({
+    pattern: "fanart",
+    alias: ["animefanart"],
+    react: "🎭",
+    desc: "Get random anime fanart",
+    category: "anime",
+    use: '.fanart',
+    filename: __filename
+},
+async(conn, mek, m,{from, reply}) => {
+    try {
+        const response = await axios.get('https://okatsu-rolezapiiz.vercel.app/anime/fanart')
+        if (response.data && response.data.url) {
+            await conn.sendMessage(from, {
+                image: { url: response.data.url },
+                caption: '🎭 *Anime Fanart*\n> © Powered By Sila Tech'
+            }, { quoted: mek })
+        } else {
+            reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐠𝐞𝐭 𝐚𝐧𝐢𝐦𝐞 𝐟𝐚𝐧𝐚𝐫𝐭\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+        }
+    } catch (e) {
+        reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐠𝐞𝐭 𝐚𝐧𝐢𝐦𝐞 𝐟𝐚𝐧𝐚𝐫𝐭\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    }
+})
+
+// Anime Happy
+cmd({
+    pattern: "animehappy",
+    alias: ["happyanime", "ahappy"],
+    react: "😊",
+    desc: "Get random happy anime image",
+    category: "anime",
+    use: '.animehappy',
+    filename: __filename
+},
+async(conn, mek, m,{from, reply}) => {
+    try {
+        const response = await axios.get('https://okatsu-rolezapiiz.vercel.app/anime/happy')
+        if (response.data && response.data.url) {
+            await conn.sendMessage(from, {
+                image: { url: response.data.url },
+                caption: '😊 *Happy Anime*\n> © Powered By Sila Tech'
+            }, { quoted: mek })
+        } else {
+            reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐠𝐞𝐭 𝐡𝐚𝐩𝐩𝐲 𝐚𝐧𝐢𝐦𝐞\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+        }
+    } catch (e) {
+        reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐠𝐞𝐭 𝐡𝐚𝐩𝐩𝐲 𝐚𝐧𝐢𝐦𝐞\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    }
+})
+
+// Anime Kiss
+cmd({
+    pattern: "animekiss",
+    alias: ["kissanime", "akiss"],
+    react: "💋",
+    desc: "Get random anime kiss image",
+    category: "anime",
+    use: '.animekiss',
+    filename: __filename
+},
+async(conn, mek, m,{from, reply}) => {
+    try {
+        const response = await axios.get('https://okatsu-rolezapiiz.vercel.app/anime/kiss')
+        if (response.data && response.data.url) {
+            await conn.sendMessage(from, {
+                image: { url: response.data.url },
+                caption: '💋 *Anime Kiss*\n> © Powered By Sila Tech'
+            }, { quoted: mek })
+        } else {
+            reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐠𝐞𝐭 𝐚𝐧𝐢𝐦𝐞 𝐤𝐢𝐬𝐬\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+        }
+    } catch (e) {
+        reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐠𝐞𝐭 𝐚𝐧𝐢𝐦𝐞 𝐤𝐢𝐬𝐬\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    }
+})
+
+// =============================================================
+// 📌 MAKER COMMANDS
+// =============================================================
+
+// Brat Maker
+cmd({
+    pattern: "brat",
+    alias: ["bratmaker"],
+    react: "👧",
+    desc: "Create brat image",
+    category: "maker",
+    use: '.brat [text]',
+    filename: __filename
+},
+async(conn, mek, m,{from, reply, q}) => {
+    if (!q) return reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐏𝐥𝐞𝐚𝐬𝐞 𝐩𝐫𝐨𝐯𝐢𝐝𝐞 𝐭𝐞𝐱𝐭\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    
+    try {
+        const response = await axios.get(`https://okatsu-rolezapiiz.vercel.app/maker/brat?q=${encodeURIComponent(q)}`, {
+            responseType: 'arraybuffer'
+        })
+        
         await conn.sendMessage(from, {
-            image: { url: 'https://files.catbox.moe/277zt9.jpg' },
-            caption: quickMenu,
-            contextInfo: {
-                mentionedJid: [sender],
-                forwardingScore: 999,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363402325089913@newsletter',
-                    newsletterName: "𝐒𝐢𝐥𝐚 𝐌𝐃",
-                    serverMessageId: 143
-                }
-            }
+            image: response.data,
+            caption: `👧 *Brat Maker*\n📝 ${q}\n\n> © Powered By Sila Tech`
         }, { quoted: mek })
     } catch (e) {
-        await conn.sendMessage(from, { text: quickMenu })
+        reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐜𝐫𝐞𝐚𝐭𝐞 𝐛𝐫𝐚𝐭 𝐢𝐦𝐚𝐠𝐞\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
     }
-} catch (e) {
-    reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → ' + e.message + '\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐌𝐃')
-    l(e)
-}
+})
+
+// Brat Video Maker
+cmd({
+    pattern: "bratvid",
+    alias: ["bratvideo"],
+    react: "🎬",
+    desc: "Create brat video",
+    category: "maker",
+    use: '.bratvid [text]',
+    filename: __filename
+},
+async(conn, mek, m,{from, reply, q}) => {
+    if (!q) return reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐏𝐥𝐞𝐚𝐬𝐞 𝐩𝐫𝐨𝐯𝐢𝐝𝐞 𝐭𝐞𝐱𝐭\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    
+    try {
+        const response = await axios.get(`https://okatsu-rolezapiiz.vercel.app/maker/bratvid?q=${encodeURIComponent(q)}`)
+        if (response.data && response.data.url) {
+            await conn.sendMessage(from, {
+                video: { url: response.data.url },
+                caption: `🎬 *Brat Video*\n📝 ${q}\n\n> © Powered By Sila Tech`
+            }, { quoted: mek })
+        } else {
+            reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐜𝐫𝐞𝐚𝐭𝐞 𝐛𝐫𝐚𝐭 𝐯𝐢𝐝𝐞𝐨\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+        }
+    } catch (e) {
+        reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐜𝐫𝐞𝐚𝐭𝐞 𝐛𝐫𝐚𝐭 𝐯𝐢𝐝𝐞𝐨\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    }
+})
+
+// Code Snap Maker
+cmd({
+    pattern: "codesnap",
+    alias: ["codesnippet"],
+    react: "💻",
+    desc: "Create code snippet image",
+    category: "maker",
+    use: '.codesnap [code]',
+    filename: __filename
+},
+async(conn, mek, m,{from, reply, q}) => {
+    if (!q) return reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐏𝐥𝐞𝐚𝐬𝐞 𝐩𝐫𝐨𝐯𝐢𝐝𝐞 𝐜𝐨𝐝𝐞\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    
+    try {
+        const response = await axios.get(`https://okatsu-rolezapiiz.vercel.app/maker/codesnap?q=${encodeURIComponent(q)}`, {
+            responseType: 'arraybuffer'
+        })
+        
+        await conn.sendMessage(from, {
+            image: response.data,
+            caption: `💻 *Code Snap*\n\n> © Powered By Sila Tech`
+        }, { quoted: mek })
+    } catch (e) {
+        reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐜𝐫𝐞𝐚𝐭𝐞 𝐜𝐨𝐝𝐞 𝐬𝐧𝐚𝐩\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    }
+})
+
+// Image to iOS Maker
+cmd({
+    pattern: "img2ios",
+    alias: ["imagetios", "iphone"],
+    react: "📱",
+    desc: "Convert image to iOS style",
+    category: "maker",
+    use: '.img2ios [reply to image]',
+    filename: __filename
+},
+async(conn, mek, m,{from, reply, quoted}) => {
+    if (!quoted || !quoted.image) return reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐏𝐥𝐞𝐚𝐬𝐞 𝐫𝐞𝐩𝐥𝐲 𝐭𝐨 𝐚𝐧 𝐢𝐦𝐚𝐠𝐞\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    
+    try {
+        reply('╔► 𝐏𝐫𝐨𝐜𝐞𝐬𝐬𝐢𝐧𝐠: ⏳\n╚► → 𝐂𝐨𝐧𝐯𝐞𝐫𝐭𝐢𝐧𝐠 𝐭𝐨 𝐢𝐎𝐒 𝐬𝐭𝐲𝐥𝐞...\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+        
+        // Need to download image and upload to API
+        reply('╔► 𝐍𝐨𝐭𝐞: 📝\n╚► → 𝐓𝐡𝐢𝐬 𝐟𝐞𝐚𝐭𝐮𝐫𝐞 𝐢𝐬 𝐮𝐧𝐝𝐞𝐫 𝐝𝐞𝐯𝐞𝐥𝐨𝐩𝐦𝐞𝐧𝐭\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    } catch (e) {
+        reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐜𝐨𝐧𝐯𝐞𝐫𝐭 𝐢𝐦𝐚𝐠𝐞\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    }
+})
+
+// JMK48 Maker
+cmd({
+    pattern: "jmk48",
+    alias: ["jmk"],
+    react: "🌟",
+    desc: "Generate JMK48 image",
+    category: "maker",
+    use: '.jmk48',
+    filename: __filename
+},
+async(conn, mek, m,{from, reply}) => {
+    try {
+        const response = await axios.get('https://okatsu-rolezapiiz.vercel.app/maker/jmk48', {
+            responseType: 'arraybuffer'
+        })
+        
+        await conn.sendMessage(from, {
+            image: response.data,
+            caption: '🌟 *JMK48*\n> © Powered By Sila Tech'
+        }, { quoted: mek })
+    } catch (e) {
+        reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐠𝐞𝐧𝐞𝐫𝐚𝐭𝐞 𝐉𝐌𝐊𝟒𝟖\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    }
+})
+
+// MPLS Maker
+cmd({
+    pattern: "mpls",
+    alias: ["mplsmaker"],
+    react: "🏙️",
+    desc: "Generate MPLS image",
+    category: "maker",
+    use: '.mpls',
+    filename: __filename
+},
+async(conn, mek, m,{from, reply}) => {
+    try {
+        const response = await axios.get('https://okatsu-rolezapiiz.vercel.app/maker/mpls', {
+            responseType: 'arraybuffer'
+        })
+        
+        await conn.sendMessage(from, {
+            image: response.data,
+            caption: '🏙️ *MPLS*\n> © Powered By Sila Tech'
+        }, { quoted: mek })
+    } catch (e) {
+        reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐠𝐞𝐧𝐞𝐫𝐚𝐭𝐞 𝐌𝐏𝐋𝐒\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    }
+})
+
+// =============================================================
+// 📌 DOWNLOADER COMMANDS
+// =============================================================
+
+// CapCut Downloader
+cmd({
+    pattern: "capcut",
+    alias: ["capcutdl", "ccdl"],
+    react: "✂️",
+    desc: "Download CapCut videos",
+    category: "downloader",
+    use: '.capcut [url]',
+    filename: __filename
+},
+async(conn, mek, m,{from, reply, q}) => {
+    if (!q) return reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐏𝐥𝐞𝐚𝐬𝐞 𝐩𝐫𝐨𝐯𝐢𝐝𝐞 𝐂𝐚𝐩𝐂𝐮𝐭 𝐮𝐫𝐥\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    
+    try {
+        const response = await axios.get(`https://okatsu-rolezapiiz.vercel.app/downloader/capcut?url=${encodeURIComponent(q)}`)
+        if (response.data && response.data.url) {
+            await conn.sendMessage(from, {
+                video: { url: response.data.url },
+                caption: `✂️ *CapCut Video*\n\n> © Powered By Sila Tech`
+            }, { quoted: mek })
+        } else {
+            reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐝𝐨𝐰𝐧𝐥𝐨𝐚𝐝 𝐂𝐚𝐩𝐂𝐮𝐭 𝐯𝐢𝐝𝐞𝐨\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+        }
+    } catch (e) {
+        reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐝𝐨𝐰𝐧𝐥𝐨𝐚𝐝 𝐂𝐚𝐩𝐂𝐮𝐭 𝐯𝐢𝐝𝐞𝐨\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    }
+})
+
+// Git Clone Downloader
+cmd({
+    pattern: "gitclone",
+    alias: ["gitdl", "githubclone"],
+    react: "🐙",
+    desc: "Clone GitHub repositories",
+    category: "downloader",
+    use: '.gitclone [repo url]',
+    filename: __filename
+},
+async(conn, mek, m,{from, reply, q}) => {
+    if (!q) return reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐏𝐥𝐞𝐚𝐬𝐞 𝐩𝐫𝐨𝐯𝐢𝐝𝐞 𝐆𝐢𝐭𝐇𝐮𝐛 𝐫𝐞𝐩𝐨 𝐮𝐫𝐥\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    
+    try {
+        const response = await axios.get(`https://okatsu-rolezapiiz.vercel.app/downloader/gitclone?url=${encodeURIComponent(q)}`)
+        if (response.data && response.data.url) {
+            reply(`🐙 *GitHub Clone*\n📦 Repository cloned successfully\n🔗 Download: ${response.data.url}\n\n> © Powered By Sila Tech`)
+        } else {
+            reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐜𝐥𝐨𝐧𝐞 𝐫𝐞𝐩𝐨𝐬𝐢𝐭𝐨𝐫𝐲\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+        }
+    } catch (e) {
+        reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐜𝐥𝐨𝐧𝐞 𝐫𝐞𝐩𝐨𝐬𝐢𝐭𝐨𝐫𝐲\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    }
+})
+
+// Pinterest Downloader
+cmd({
+    pattern: "pinterest",
+    alias: ["pindl", "pin"],
+    react: "📌",
+    desc: "Download Pinterest images/videos",
+    category: "downloader",
+    use: '.pinterest [url]',
+    filename: __filename
+},
+async(conn, mek, m,{from, reply, q}) => {
+    if (!q) return reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐏𝐥𝐞𝐚𝐬𝐞 𝐩𝐫𝐨𝐯𝐢𝐝𝐞 𝐏𝐢𝐧𝐭𝐞𝐫𝐞𝐬𝐭 𝐮𝐫𝐥\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    
+    try {
+        const response = await axios.get(`https://okatsu-rolezapiiz.vercel.app/downloader/pinterest?url=${encodeURIComponent(q)}`)
+        if (response.data && response.data.url) {
+            const isVideo = response.data.url.includes('.mp4') || response.data.type === 'video'
+            
+            if (isVideo) {
+                await conn.sendMessage(from, {
+                    video: { url: response.data.url },
+                    caption: `📌 *Pinterest Video*\n\n> © Powered By Sila Tech`
+                }, { quoted: mek })
+            } else {
+                await conn.sendMessage(from, {
+                    image: { url: response.data.url },
+                    caption: `📌 *Pinterest Image*\n\n> © Powered By Sila Tech`
+                }, { quoted: mek })
+            }
+        } else {
+            reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐝𝐨𝐰𝐧𝐥𝐨𝐚𝐝 𝐏𝐢𝐧𝐭𝐞𝐫𝐞𝐬𝐭\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+        }
+    } catch (e) {
+        reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐝𝐨𝐰𝐧𝐥𝐨𝐚𝐝 𝐏𝐢𝐧𝐭𝐞𝐫𝐞𝐬𝐭\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    }
+})
+
+// =============================================================
+// 📌 SEARCH COMMANDS
+// =============================================================
+
+// GitHub Trending
+cmd({
+    pattern: "githubtrend",
+    alias: ["trendgithub", "gtrend"],
+    react: "🔥",
+    desc: "Get trending GitHub repositories",
+    category: "search",
+    use: '.githubtrend',
+    filename: __filename
+},
+async(conn, mek, m,{from, reply}) => {
+    try {
+        const response = await axios.get('https://okatsu-rolezapiiz.vercel.app/search/githubtrend')
+        if (response.data && response.data.result) {
+            let trendList = '╔► 𝐆𝐢𝐭𝐇𝐮𝐛 𝐓𝐫𝐞𝐧𝐝𝐢𝐧𝐠: 🔥\n'
+            response.data.result.slice(0, 5).forEach((repo, i) => {
+                trendList += `╠► ${i+1}. ${repo.name}\n║   ⭐ ${repo.stars || 0} stars\n║   📝 ${repo.description || 'No description'}\n`
+            })
+            trendList += `╚►\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`
+            
+            reply(trendList)
+        } else {
+            reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐠𝐞𝐭 𝐭𝐫𝐞𝐧𝐝𝐢𝐧𝐠 𝐫𝐞𝐩𝐨𝐬\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+        }
+    } catch (e) {
+        reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐠𝐞𝐭 𝐆𝐢𝐭𝐇𝐮𝐛 𝐭𝐫𝐞𝐧𝐝𝐢𝐧𝐠\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    }
+})
+
+// GSM Arena Search
+cmd({
+    pattern: "gsmarena",
+    alias: ["phoneinfo", "mobileinfo"],
+    react: "📱",
+    desc: "Search mobile phone info",
+    category: "search",
+    use: '.gsmarena [phone name]',
+    filename: __filename
+},
+async(conn, mek, m,{from, reply, q}) => {
+    if (!q) return reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐏𝐥𝐞𝐚𝐬𝐞 𝐩𝐫𝐨𝐯𝐢𝐝𝐞 𝐩𝐡𝐨𝐧𝐞 𝐧𝐚𝐦𝐞\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    
+    try {
+        const response = await axios.get(`https://okatsu-rolezapiiz.vercel.app/tools/gsmarena?q=${encodeURIComponent(q)}`)
+        if (response.data && response.data.result) {
+            const phone = response.data.result[0]
+            if (phone) {
+                reply(`📱 *${phone.name}*\n📊 ${phone.specs || 'No specs available'}\n\n> © Powered By Sila Tech`)
+            } else {
+                reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐏𝐡𝐨𝐧𝐞 𝐧𝐨𝐭 𝐟𝐨𝐮𝐧𝐝\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+            }
+        } else {
+            reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐬𝐞𝐚𝐫𝐜𝐡 𝐩𝐡𝐨𝐧𝐞 𝐢𝐧𝐟𝐨\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+        }
+    } catch (e) {
+        reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐬𝐞𝐚𝐫𝐜𝐡 𝐩𝐡𝐨𝐧𝐞 𝐢𝐧𝐟𝐨\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    }
+})
+
+// Pixiv Search
+cmd({
+    pattern: "pixiv",
+    alias: ["pixivsearch"],
+    react: "🎨",
+    desc: "Search Pixiv images",
+    category: "search",
+    use: '.pixiv [query]',
+    filename: __filename
+},
+async(conn, mek, m,{from, reply, q}) => {
+    if (!q) return reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐏𝐥𝐞𝐚𝐬𝐞 𝐩𝐫𝐨𝐯𝐢𝐝𝐞 𝐬𝐞𝐚𝐫𝐜𝐡 𝐪𝐮𝐞𝐫𝐲\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    
+    try {
+        const response = await axios.get(`https://okatsu-rolezapiiz.vercel.app/search/pixiv?q=${encodeURIComponent(q)}`)
+        if (response.data && response.data.url) {
+            await conn.sendMessage(from, {
+                image: { url: response.data.url },
+                caption: `🎨 *Pixiv Search*\n🔍 ${q}\n\n> © Powered By Sila Tech`
+            }, { quoted: mek })
+        } else {
+            reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐍𝐨 𝐫𝐞𝐬𝐮𝐥𝐭𝐬 𝐟𝐨𝐮𝐧𝐝\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+        }
+    } catch (e) {
+        reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐬𝐞𝐚𝐫𝐜𝐡 𝐏𝐢𝐱𝐢𝐯\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    }
+})
+
+// =============================================================
+// 📌 RANDOM/OTHER COMMANDS
+// =============================================================
+
+// Random BA (Beautiful Animated)
+cmd({
+    pattern: "ba",
+    alias: ["beautifulanimated", "randomba"],
+    react: "✨",
+    desc: "Get random beautiful animated image",
+    category: "random",
+    use: '.ba',
+    filename: __filename
+},
+async(conn, mek, m,{from, reply}) => {
+    try {
+        const response = await axios.get('https://okatsu-rolezapiiz.vercel.app/random/ba')
+        if (response.data && response.data.url) {
+            await conn.sendMessage(from, {
+                image: { url: response.data.url },
+                caption: '✨ *Beautiful Animated*\n> © Powered By Sila Tech'
+            }, { quoted: mek })
+        } else {
+            reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐠𝐞𝐭 𝐫𝐚𝐧𝐝𝐨𝐦 𝐢𝐦𝐚𝐠𝐞\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+        }
+    } catch (e) {
+        reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐠𝐞𝐭 𝐫𝐚𝐧𝐝𝐨𝐦 𝐢𝐦𝐚𝐠𝐞\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    }
+})
+
+// Lyrics Search
+cmd({
+    pattern: "lyrics",
+    alias: ["songlyrics", "lyric"],
+    react: "🎵",
+    desc: "Search song lyrics",
+    category: "search",
+    use: '.lyrics [song name]',
+    filename: __filename
+},
+async(conn, mek, m,{from, reply, q}) => {
+    if (!q) return reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐏𝐥𝐞𝐚𝐬𝐞 𝐩𝐫𝐨𝐯𝐢𝐝𝐞 𝐬𝐨𝐧𝐠 𝐧𝐚𝐦𝐞\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    
+    try {
+        const response = await axios.get(`https://okatsu-rolezapiiz.vercel.app/api/lyrics?q=${encodeURIComponent(q)}`)
+        if (response.data) {
+            const lyrics = response.data.lyrics || response.data
+            const title = response.data.title || q
+            
+            reply(`🎵 *${title}*\n\n${lyrics.slice(0, 1500)}${lyrics.length > 1500 ? '...' : ''}\n\n> © Powered By Sila Tech`)
+        } else {
+            reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐋𝐲𝐫𝐢𝐜𝐬 𝐧𝐨𝐭 𝐟𝐨𝐮𝐧𝐝\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+        }
+    } catch (e) {
+        reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐠𝐞𝐭 𝐥𝐲𝐫𝐢𝐜𝐬\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    }
+})
+
+// AI Command
+cmd({
+    pattern: "aichat",
+    alias: ["chatgpt", "openai"],
+    react: "🤖",
+    desc: "Chat with AI",
+    category: "ai",
+    use: '.aichat [message]',
+    filename: __filename
+},
+async(conn, mek, m,{from, reply, q}) => {
+    if (!q) return reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐏𝐥𝐞𝐚𝐬𝐞 𝐩𝐫𝐨𝐯𝐢𝐝𝐞 𝐦𝐞𝐬𝐬𝐚𝐠𝐞\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    
+    try {
+        const response = await axios.get(`https://okatsu-rolezapiiz.vercel.app/ai/ai?q=${encodeURIComponent(q)}`)
+        if (response.data && response.data.result) {
+            reply(`🤖 *AI Response*\n\n${response.data.result}\n\n> © Powered By Sila Tech`)
+        } else {
+            reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐍𝐨 𝐫𝐞𝐬𝐩𝐨𝐧𝐬𝐞 𝐟𝐫𝐨𝐦 𝐀𝐈\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+        }
+    } catch (e) {
+        reply('╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐠𝐞𝐭 𝐀𝐈 𝐫𝐞𝐬𝐩𝐨𝐧𝐬𝐞\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡')
+    }
 })
