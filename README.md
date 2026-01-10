@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <a href="https://popkid-get-your-id-e1e23276b30a.herokuapp.com/pair" target="_blank">
+  <a href="https://sila-sessions-site.onrender.com" target="_blank">
     <img src="https://img.shields.io/badge/GET_PAIR_CODE-4285F4?style=for-the-badge&logo=whatsapp&logoColor=white&labelColor=000000" width="200" alt="Pair Code"/>
   </a>
 </p>
