@@ -6,7 +6,7 @@ const { silainfo, myquoted } = require('../config');
 //=========== VIDEO COMMAND ===========//
 cmd({
     pattern: "video",
-    alias: ["ytmp4", "mp4", "ytv", "vi", "v", "vid", "vide", "videos", "ytvi", "ytvid", "ytvide", "ytvideos", "searchyt", "download", "get", "need", "search"],
+    alias: ["ytmp4", "mp4", "ytv", "vi", "v", "vid", "vide", "videos", "silavideo", "ytvid", "ytvide", "ytvideos", "searchyt", "download", "get", "need", "search"],
     desc: "Download YouTube MP4",
     category: "media",
     react: "📽️",
