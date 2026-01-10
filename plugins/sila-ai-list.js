@@ -3,7 +3,7 @@ const axios = require('axios');
 
 cmd({
     pattern: "openai",
-    alias: ["chatgpt", "gpt3", "open-gpt", "gpt"],
+    alias: ["chatgpt", "gpt3", "silaai", "gpt"],
     desc: "Chat with OpenAI (GPT-3.5/4)",
     category: "ai",
     react: "🧠",
@@ -16,7 +16,7 @@ async (conn, mek, m, { from, args, q, reply, pushname }) => {
             return reply(`╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐏𝐥𝐞𝐚𝐬𝐞 𝐩𝐫𝐨𝐯𝐢𝐝𝐞 𝐚 𝐪𝐮𝐞𝐬𝐭𝐢𝐨𝐧\n\n╔► 𝐔𝐬𝐚𝐠𝐞:\n╚► → .openai What is AI?\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`);
         }
 
-        const processingMsg = await reply(`╔► 𝐏𝐫𝐨𝐜𝐞𝐬𝐬𝐢𝐧𝐠: ⏳\n╚► → 𝐀𝐬𝐤𝐢𝐧𝐠 𝐎𝐩𝐞𝐧𝐀𝐈...\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`);
+        const processingMsg = await reply(`╚► → 𝐀𝐬𝐤𝐢𝐧𝐠 𝐎𝐩𝐞𝐧𝐀𝐈...\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`);
 
         try {
             const apiUrl = `https://vapis.my.id/api/openai?q=${encodeURIComponent(q)}`;
@@ -39,7 +39,7 @@ async (conn, mek, m, { from, args, q, reply, pushname }) => {
 
             const responseText = data.result.length > 3000 ? data.result.substring(0, 3000) + "..." : data.result;
             
-            await reply(`╔► 𝐎𝐩𝐞𝐧𝐀𝐈 𝐑𝐞𝐬𝐩𝐨𝐧𝐬𝐞: 🧠\n╠► 𝐔𝐬𝐞𝐫: ${pushname || "User"}\n╠► 𝐐𝐮𝐞𝐬𝐭𝐢𝐨𝐧: ${q}\n╚►\n${responseText}\n\n╔► 𝐌𝐨𝐝𝐞𝐥: 𝐆𝐏𝐓-𝟑.𝟓\n╚► → 𝐑𝐞𝐬𝐩𝐨𝐧𝐬𝐞 𝐭𝐢𝐦𝐞: ${processingMsg ? Date.now() - processingMsg.messageTimestamp * 1000 : 'N/A'}𝐦𝐬\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`);
+            await reply(`╔► 𝐎𝐩𝐞𝐧𝐀𝐈 𝐑𝐞𝐬𝐩𝐨𝐧𝐬𝐞: 🧠\n╚►\n${responseText}\n\n╔► 𝐌𝐨𝐝𝐞𝐥: 𝐆𝐏𝐓-𝟑.𝟓\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`);
             
             await conn.sendMessage(from, { react: { text: `✅`, key: mek.key } });
 
@@ -60,7 +60,7 @@ async (conn, mek, m, { from, args, q, reply, pushname }) => {
 
 cmd({
     pattern: "ai",
-    alias: ["bot", "sila", "gpt4", "bing", "chat", "assistant"],
+    alias: ["bot", "silai", "gpt4", "bing", "chat", "assistant"],
     desc: "Chat with AI Assistant",
     category: "ai",
     react: "🤖",
@@ -73,7 +73,7 @@ async (conn, mek, m, { from, args, q, reply, pushname }) => {
             return reply(`╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐏𝐥𝐞𝐚𝐬𝐞 𝐞𝐧𝐭𝐞𝐫 𝐲𝐨𝐮𝐫 𝐦𝐞𝐬𝐬𝐚𝐠𝐞\n\n╔► 𝐄𝐱𝐚𝐦𝐩𝐥𝐞𝐬:\n╠► .ai Hello, how are you?\n╠► .ai Explain quantum computing\n╚► → .ai Write a poem about nature\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`);
         }
 
-        const processingMsg = await reply(`╔► 𝐏𝐫𝐨𝐜𝐞𝐬𝐬𝐢𝐧𝐠: ⏳\n╚► → 𝐓𝐡𝐢𝐧𝐤𝐢𝐧𝐠...\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`);
+        const processingMsg = await reply(`╚► 𝐓𝐡𝐢𝐧𝐤𝐢𝐧𝐠...\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`);
 
         try {
             const apiUrl = `https://lance-frank-asta.onrender.com/api/gpt?q=${encodeURIComponent(q)}`;
@@ -96,7 +96,7 @@ async (conn, mek, m, { from, args, q, reply, pushname }) => {
 
             const responseText = data.message.length > 3000 ? data.message.substring(0, 3000) + "..." : data.message;
             
-            await reply(`╔► 𝐀𝐈 𝐀𝐬𝐬𝐢𝐬𝐭𝐚𝐧𝐭: 🤖\n╠► 𝐔𝐬𝐞𝐫: ${pushname || "User"}\n╠► 𝐐𝐮𝐞𝐬𝐭𝐢𝐨𝐧: ${q.length > 100 ? q.substring(0, 100) + "..." : q}\n╚►\n${responseText}\n\n╔► 𝐓𝐢𝐩:\n╚► → 𝐔𝐬𝐞 .openai 𝐟𝐨𝐫 𝐆𝐏𝐓-𝟑.𝟓/𝟒\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`);
+            await reply(`╔► 𝐀𝐈 𝐀𝐬𝐬𝐢𝐬𝐭𝐚𝐧𝐭: 🤖\n╚►\n${responseText}\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`);
             
             await conn.sendMessage(from, { react: { text: `✅`, key: mek.key } });
 
