@@ -34,7 +34,7 @@ async function getOkatsuDownloadByUrl(youtubeUrl) {
 //=========== SILA SONG COMMAND ===========//
 cmd({
     pattern: "sila",
-    alias: ["song", "music", "mp3", "silaplay"],
+    alias: ["song", "play", "mp3", "silaplay"],
     desc: "Download YouTube audio",
     category: "media",
     react: "🎵",
@@ -115,7 +115,7 @@ async (conn, mek, m, { from, args }) => {
 //=========== SILA PLAY COMMAND (SIMPLE VERSION) ===========//
 cmd({
     pattern: "silamp3",
-    alias: ["play", "song", "silaplay2"],
+    alias: ["play2", "song2", "silaplay2"],
     desc: "Quick music download",
     category: "media",
     react: "🎶",
