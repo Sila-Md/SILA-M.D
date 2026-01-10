@@ -3,10 +3,15 @@
   "version": "3.0.0",
   "description": "A WhatsApp Bot Created By SILA-MD",
   "main": "index.js",
+  "engines": {
+    "node": "18.x",
+    "npm": "9.x"
+  },
   "scripts": {
     "start": "pm2 start index.js --deep-monitoring --attach --name SILA-M.D",
     "stop": "pm2 stop SILA-M.D",
-    "restart": "pm2 restart SILA-M.D"
+    "restart": "pm2 restart SILA-M.D",
+    "dev": "node index.js"
   },
   "dependencies": {
     "@whiskeysockets/baileys": "npm:gifted-baileys@2.0.0",
