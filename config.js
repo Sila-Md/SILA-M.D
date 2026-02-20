@@ -6,7 +6,7 @@ function convertToBool(text, fault = 'true') {
 }
 
 const config = {
-    SESSION_ID: process.env.SESSION_ID || "POPKID;;;fEFjEKzZ#FxcwFHsguBK-mbJSA4CAm6lS0Xrd8pN-IL3Qtq1DvIg",
+    SESSION_ID: process.env.SESSION_ID || "sila~GIM2QBAI#NtOGhuejchY5uZV5kp1444HWfIOGfv_nPc-AVrcgPR8",
     AUTO_STATUS_SEEN: process.env.AUTO_STATUS_SEEN || "true",
     AUTO_STATUS_REPLY: process.env.AUTO_STATUS_REPLY || "false",
     AUTO_STATUS_REACT: process.env.AUTO_STATUS_REACT || "true",
@@ -17,11 +17,11 @@ const config = {
     CUSTOM_REACT: process.env.CUSTOM_REACT || "false",
     CUSTOM_REACT_EMOJIS: process.env.CUSTOM_REACT_EMOJIS || "💝,💖,💗,❤️‍🩹,❤️,🧡,💛,💚,💙,💜,🤎,🖤,🤍",
     DELETE_LINKS: process.env.DELETE_LINKS || "false",
-    OWNER_NUMBER: process.env.OWNER_NUMBER || "255789661031",
-    OWNER_NAME: process.env.OWNER_NAME || "SILA WHISPER",
+    OWNER_NUMBER: process.env.OWNER_NUMBER || "255781250501",
+    OWNER_NAME: process.env.OWNER_NAME || "Byte0XFF ProDev",
     DESCRIPTION: process.env.DESCRIPTION || "*© 𝐏𝐎𝐖𝐄𝐃 𝐁𝐘 𝐒𝐈𝐋𝐀 𝐓𝐄𝐂𝐇*",
     ALIVE_IMG: process.env.ALIVE_IMG || "https://files.catbox.moe/277zt9.jpg",
-    LIVE_MSG: process.env.LIVE_MSG || "> HELLO I'AM *SILA WHISPER*🌝",
+    LIVE_MSG: process.env.LIVE_MSG || "> HELLO I'AM *Byte0XFF ProDev*🌝",
     READ_MESSAGE: process.env.READ_MESSAGE || "false",
     AUTO_REACT: process.env.AUTO_REACT || "false",
     ANTI_BAD: process.env.ANTI_BAD || "false",
