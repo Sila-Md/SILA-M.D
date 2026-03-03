@@ -12,8 +12,8 @@
 </p>
 
 <p align="center">
-  <a href="https://sila-md-pair-site.onrender.com" target="_blank">
-    <img src="https://img.shields.io/badge/GET_PAIR_CODE-4285F4?style=for-the-badge&logo=whatsapp&logoColor=white&labelColor=000000" width="200" alt="https://sila-new-pairing-739c09b01546.herokuapp.com/"/>
+  <a href="https://sila-new-pairing-739c09b01546.herokuapp.com/" target="_blank">
+    <img src="https://img.shields.io/badge/GET_PAIR_CODE-4285F4?style=for-the-badge&logo=whatsapp&logoColor=white&labelColor=000000" width="200" alt="pair code"/>
   </a>
 </p>
 
