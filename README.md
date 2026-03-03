@@ -13,7 +13,7 @@
 
 <p align="center">
   <a href="https://sila-md-pair-site.onrender.com" target="_blank">
-    <img src="https://img.shields.io/badge/GET_PAIR_CODE-4285F4?style=for-the-badge&logo=whatsapp&logoColor=white&labelColor=000000" width="200" alt="Pair Code"/>
+    <img src="https://img.shields.io/badge/GET_PAIR_CODE-4285F4?style=for-the-badge&logo=whatsapp&logoColor=white&labelColor=000000" width="200" alt="https://sila-new-pairing-739c09b01546.herokuapp.com/"/>
   </a>
 </p>
 
@@ -25,7 +25,7 @@
 <p style="text-align: center; font-size: 1.2em;">
 
 <p align="center">
-<a href='https://dashboard.heroku.com/new?template=https://github.com/mbwa-md/sesesions' target="_blank"><img alt='Heroku' src='https://img.shields.io/badge/-heroku ‎ deploy-FF004D?style=for-the-badge&logo=heroku&logoColor=white' width=250 height=100/></a>
+<a href='https://dashboard.heroku.com/new?template=https://github.com/Sila-Md/SILA-M.D' target="_blank"><img alt='Heroku' src='https://img.shields.io/badge/-heroku ‎ deploy-FF004D?style=for-the-badge&logo=heroku&logoColor=white' width=250 height=100/></a>
 
 ---
 
