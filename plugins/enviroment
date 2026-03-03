@@ -1015,4 +1015,5 @@ cmd({
         contextInfo: getContextInfo({ sender: sender })
     }, { quoted: fkontak });
   }
+
 });
